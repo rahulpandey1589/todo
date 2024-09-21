@@ -19,6 +19,7 @@ namespace TodoAPI.Services.Mappers
             foreach (var todo in todoList)
             {
                 TodoModel model = new TodoModel();
+                model.Id = todo.Id;
                 model.AssignedTo = todo.AssignedTo;
                 model.TaskName = todo.TaskName;
                 model.IsCompleted = todo.IsCompleted;
