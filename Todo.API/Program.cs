@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
-using Todo.Persistence;
 using Todo.Persistence.Concrete;
+using Todo.Persistence.Domain;
 using Todo.Persistence.Interfaces;
 using TodoAPI.Services.Concrete;
 using TodoAPI.Services.Interfaces;

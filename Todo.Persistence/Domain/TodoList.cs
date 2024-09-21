@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Todo.Persistence
+namespace Todo.Persistence.Domain
 {
 
     public class TodoList : AuditEntity

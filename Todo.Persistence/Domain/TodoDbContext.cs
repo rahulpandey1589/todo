@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Todo.Persistence
+namespace Todo.Persistence.Domain
 {
     // Entity Framework Heart
     public class TodoDbContext : DbContext
     {
 
-        public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options) 
+        public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options)
         {
-        
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

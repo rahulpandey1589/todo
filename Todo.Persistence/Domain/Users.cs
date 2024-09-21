@@ -1,4 +1,4 @@
-﻿namespace Todo.Persistence
+﻿namespace Todo.Persistence.Domain
 {
 
     public class Users : AuditEntity
