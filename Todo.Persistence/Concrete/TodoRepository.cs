@@ -31,7 +31,12 @@ namespace Todo.Persistence.Concrete
 
         public bool InsertTodo(TodoList todo)
         {
-            todo.CreatedBy = "System";
+
+            _context.SampleTables.Add(new SampleTable()
+            {
+                Name = "Sample"
+            });
+
             _context.Todos.Add(todo);
 
             int recordsInserted = _context.SaveChanges();

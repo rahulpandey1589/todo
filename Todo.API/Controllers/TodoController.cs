@@ -6,13 +6,16 @@ using TodoAPI.Services.Interfaces;
 
 namespace Todo.API.Controllers
 {
+    // Separation of concerns
+    // Route
+
     [Route("api/[controller]")]
     [ApiController]
     public class TodoController : ControllerBase
     {
         private readonly ITodoService _todoService;
 
-        public TodoController(ITodoService todoService)
+        public TodoController(ITodoService todoService)  // constructor injection
         {
             _todoService = todoService;
         }
@@ -20,6 +23,7 @@ namespace Todo.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+     
             var allTodos = _todoService.GetAllTodos();
 
             return Ok(allTodos);
@@ -36,7 +40,8 @@ namespace Todo.API.Controllers
 
 
         [HttpPost] // insert records into database
-        public async Task<IActionResult> Post([FromBody] TodoModel todoModel)
+        [Route("post")]
+        public async Task<IActionResult> Post([FromBody]TodoModel todoModel)
         {
             var response = _todoService.InsertNewTodo(todoModel);
             return Ok(response);

@@ -33,14 +33,6 @@ namespace Todo.API
             builder.Services.AddTransient<ITodoRepository, TodoRepository>();
 
 
-
-
-            //builder.Services.AddScoped<ITodoService, TodoService>();
-
-            //builder.Services.AddSingleton<ITodoService, TodoService>();
-
-
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

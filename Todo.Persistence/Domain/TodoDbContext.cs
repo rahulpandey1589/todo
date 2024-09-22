@@ -23,9 +23,28 @@ namespace Todo.Persistence.Domain
         }
 
 
+        public override int SaveChanges()
+        {
+
+            foreach (var entry in ChangeTracker.Entries<AuditEntity>())
+            {
+                if(entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedOn = System.DateTime.UtcNow;
+                    entry.Entity.CreatedBy = "System";
+                }
+            }
+
+
+            return base.SaveChanges();
+        }
+
+
         public DbSet<Users> Users { get; set; }
 
         public DbSet<TodoList> Todos { get; set; }
+
+        public DbSet<SampleTable> SampleTables { get; set; }    
 
     }
 }

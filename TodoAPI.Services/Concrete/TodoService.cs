@@ -23,6 +23,9 @@ namespace TodoAPI.Services.Concrete
 
         public IEnumerable<TodoModel> GetAllTodos()
         {
+            // depedency Injection
+
+
             List<TodoModel> todoModelList = new List<TodoModel>();
 
             var todos = _todoRepository.GetAll();
