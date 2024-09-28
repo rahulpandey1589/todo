@@ -73,9 +73,12 @@ namespace Todo.API.Controllers
 
 
         [HttpDelete] // delete a record from database
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(int id)
         {
-            return Ok();
+
+            var response = _todoService.DeleteTodo(id);
+
+            return Ok(response);
         }
     }
 }

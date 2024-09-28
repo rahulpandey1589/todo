@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TodoAPI.Models;
+﻿using TodoAPI.Models;
 
 namespace TodoAPI.Services.Interfaces
 {
@@ -16,6 +11,7 @@ namespace TodoAPI.Services.Interfaces
 
         IEnumerable<TodoModel> GetAllTodos(bool fetchPendingOnly);
 
+        bool DeleteTodo(int id);
 
     }
 }

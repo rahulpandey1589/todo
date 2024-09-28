@@ -1,10 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Todo.Persistence.Domain;
+﻿using Todo.Persistence.Domain;
 
 namespace Todo.Persistence.Interfaces
 {
@@ -15,6 +9,8 @@ namespace Todo.Persistence.Interfaces
         bool InsertTodo(TodoList todo);
 
         IQueryable<TodoList> GetAll(bool fetchPending);
+
+        bool DeleteTodo(int id);
 
     }
 }

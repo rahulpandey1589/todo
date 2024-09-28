@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Todo.Persistence.Domain;
+﻿using Todo.Persistence.Domain;
 using Todo.Persistence.Interfaces;
 
 namespace Todo.Persistence.Concrete
@@ -18,6 +12,18 @@ namespace Todo.Persistence.Concrete
             _context = context;
         }
 
+        public bool DeleteTodo(int id)
+        {
+            var existingItem = _context.Todos.Where(x => x.Id == id).FirstOrDefault(); // fetch data based on ID itself
+                                                                                       // 
+             _context.Todos.Remove(existingItem);  // telling EF to delete this record
+
+            _context.Entry(existingItem).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+
+            int recordDeleted = _context.SaveChanges();
+
+            return recordDeleted > 0 ? true : false;  // ternary operator
+        }
 
         public IQueryable<TodoList> GetAll()
         {

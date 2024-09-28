@@ -1,11 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Todo.Persistence;
-using Todo.Persistence.Interfaces;
+﻿using Todo.Persistence.Interfaces;
 using TodoAPI.Models;
 using TodoAPI.Services.Interfaces;
 using TodoAPI.Services.Mappers;
@@ -19,6 +12,11 @@ namespace TodoAPI.Services.Concrete
         public TodoService(ITodoRepository todoRepository)
         {
             _todoRepository = todoRepository;
+        }
+
+        public bool DeleteTodo(int id)
+        {
+           return _todoRepository.DeleteTodo(id);
         }
 
         public IEnumerable<TodoModel> GetAllTodos()
