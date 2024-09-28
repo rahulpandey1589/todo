@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Todo.Persistence.Domain
+﻿namespace Todo.Persistence.Domain
 {
 
     public class TodoList : AuditEntity
@@ -16,5 +10,7 @@ namespace Todo.Persistence.Domain
         public string AssignedTo { get; set; } = default!;
 
         public bool IsCompleted { get; set; }
+
+        public TodoDetails Details { get; set; }    
     }
 }

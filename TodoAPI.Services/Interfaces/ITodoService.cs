@@ -11,7 +11,14 @@ namespace TodoAPI.Services.Interfaces
 
         IEnumerable<TodoModel> GetAllTodos(bool fetchPendingOnly);
 
-        bool DeleteTodo(int id);
+        Task<bool> DeleteTodoAsync(int id);
+
+        bool UpdateTodo(int id);
+
+        bool UpdateTodo(int Id, string taskName);
+
+        bool DeleteNonLinkedRecords(int id);
+
 
     }
 }

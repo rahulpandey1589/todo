@@ -10,7 +10,14 @@ namespace Todo.Persistence.Interfaces
 
         IQueryable<TodoList> GetAll(bool fetchPending);
 
-        bool DeleteTodo(int id);
+        Task<bool> DeleteTodoAsync(int id);
+
+        bool UpdateTodo(int  Id);
+
+        bool UpdateTodo(int id, string taskName);
+
+        bool DeleteNonLinkedRecords(int id);
+
 
     }
 }

@@ -23,6 +23,8 @@ namespace TodoAPI.Services.Mappers
                 model.AssignedTo = todo.AssignedTo;
                 model.TaskName = todo.TaskName;
                 model.IsCompleted = todo.IsCompleted;
+                model.Description = todo.Details.Description;
+                model.TaskType = todo.Details.TaskType;
 
                 todos.Add(model);
             }
@@ -35,7 +37,12 @@ namespace TodoAPI.Services.Mappers
             return new TodoList()
             {
                 AssignedTo = model.AssignedTo,
-                TaskName = model.TaskName
+                TaskName = model.TaskName,
+                Details= new TodoDetails()
+                {
+                    Description = model.Description,
+                    TaskType = "Urgent"
+                }
             };
         }
 

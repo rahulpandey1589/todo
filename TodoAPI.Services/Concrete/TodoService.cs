@@ -1,4 +1,5 @@
-﻿using Todo.Persistence.Interfaces;
+﻿using Todo.Persistence.Domain;
+using Todo.Persistence.Interfaces;
 using TodoAPI.Models;
 using TodoAPI.Services.Interfaces;
 using TodoAPI.Services.Mappers;
@@ -14,9 +15,14 @@ namespace TodoAPI.Services.Concrete
             _todoRepository = todoRepository;
         }
 
-        public bool DeleteTodo(int id)
+        public bool DeleteNonLinkedRecords(int id)
         {
-           return _todoRepository.DeleteTodo(id);
+            return _todoRepository.DeleteNonLinkedRecords(id);  
+        }
+
+        public async Task<bool> DeleteTodoAsync(int id)
+        {
+           return await _todoRepository.DeleteTodoAsync(id);
         }
 
         public IEnumerable<TodoModel> GetAllTodos()
@@ -39,9 +45,21 @@ namespace TodoAPI.Services.Concrete
 
         public bool InsertNewTodo(TodoModel todoModel)
         {
-            var todo = todoModel.ConvertToTodoList();
+            var todo = todoModel.ConvertToTodoList(); // extension method
 
             return _todoRepository.InsertTodo(todo);
+        }
+
+        public bool UpdateTodo(int  id)
+        {
+            // write own logic here
+
+           return _todoRepository.UpdateTodo(id);
+        }
+
+        public bool UpdateTodo(int Id, string taskName)
+        {
+           return _todoRepository.UpdateTodo(Id, taskName);
         }
     }
 }

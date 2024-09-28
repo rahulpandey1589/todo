@@ -9,5 +9,10 @@
         public string AssignedTo { get; set; } = default!;
 
         public bool IsCompleted { get; set; }
+        public string Description { get; set; } = default!;
+
+        public string TaskType { get; set; } = default!;
     }
+
+
 }
