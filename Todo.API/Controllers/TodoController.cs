@@ -53,6 +53,16 @@ namespace Todo.API.Controllers
         }
 
 
+        [HttpGet]
+        [Route("fetchByProcedure")]
+        public IActionResult FetchByProcedure(int todoId)
+        {
+            var allTodos = _todoService.FetchTodoByProcedure(todoId);
+
+            return Ok(allTodos);
+        }
+
+
         [HttpPost] // insert records into database
         [Route("post")]
         public async Task<IActionResult> Post([FromBody] TodoModel todoModel)

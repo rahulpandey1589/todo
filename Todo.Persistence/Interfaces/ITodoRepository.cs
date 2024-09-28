@@ -18,6 +18,7 @@ namespace Todo.Persistence.Interfaces
 
         bool DeleteNonLinkedRecords(int id);
 
+        bool FetchTodoByProcedure(int todoId);
 
     }
 }

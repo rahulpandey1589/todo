@@ -19,6 +19,8 @@ namespace TodoAPI.Services.Interfaces
 
         bool DeleteNonLinkedRecords(int id);
 
+        bool FetchTodoByProcedure(int todoId);
+
 
     }
 }

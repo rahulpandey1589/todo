@@ -1,5 +1,6 @@
 ﻿namespace Todo.Persistence.Domain
 {
+
     public class TodoDetails : AuditEntity
     {
         public int Id { get; set; }

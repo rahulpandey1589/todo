@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 using Todo.Persistence.Domain;
 using Todo.Persistence.Interfaces;
 
@@ -55,6 +56,13 @@ namespace Todo.Persistence.Concrete
             return recordDeleted > 0 ? true : false;  // ternary operator
         }
 
+        public bool FetchTodoByProcedure(int todoId)
+        {
+            var response = _context.Database.SqlQueryRaw<SqlOutput>("exec  sp_FetchTodo @Id ={0}", todoId); // this is possible
+
+            return true;
+        }
+
         public IQueryable<TodoList> GetAll()
         {
             return _context.Todos.Include(x => x.Details);
@@ -104,5 +112,15 @@ namespace Todo.Persistence.Concrete
             return false;
 
         }
+    }
+
+    public class SqlOutput
+    {
+        public int Id { get; set; }
+        public string AssginedTo { get; set; }
+        public bool IsCompleted { get; set; }
+        public string Description { get; set; }
+
+        public string TaskType { get; set; }
     }
 }

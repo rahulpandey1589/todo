@@ -25,6 +25,11 @@ namespace TodoAPI.Services.Concrete
            return await _todoRepository.DeleteTodoAsync(id);
         }
 
+        public  bool FetchTodoByProcedure(int todoId)
+        {
+           return  _todoRepository.FetchTodoByProcedure(todoId);   
+        }
+
         public IEnumerable<TodoModel> GetAllTodos()
         {
             // depedency Injection
@@ -62,4 +67,7 @@ namespace TodoAPI.Services.Concrete
            return _todoRepository.UpdateTodo(Id, taskName);
         }
     }
+
+
+ 
 }
