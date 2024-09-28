@@ -1,10 +1,6 @@
 ﻿using TodoAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TodoAPI.Services.Concrete;
 using TodoAPI.Services.Interfaces;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore.SqlServer.Scaffolding.Internal;
 
 namespace Todo.API.Controllers
 {
@@ -41,7 +37,7 @@ namespace Todo.API.Controllers
             //    }
 
             //}
-     
+
             var allTodos = _todoService.GetAllTodos();
 
             return Ok(allTodos);
@@ -49,7 +45,7 @@ namespace Todo.API.Controllers
 
         [HttpGet]
         [Route("fetchActiveTodos")]
-        public async Task<IActionResult> Get(bool fetchActiveTodos)
+        public IActionResult Get(bool fetchActiveTodos)
         {
             var allTodos = _todoService.GetAllTodos(fetchActiveTodos);
 
@@ -59,24 +55,42 @@ namespace Todo.API.Controllers
 
         [HttpPost] // insert records into database
         [Route("post")]
-        public async Task<IActionResult> Post([FromBody]TodoModel todoModel)
+        public async Task<IActionResult> Post([FromBody] TodoModel todoModel)
         {
             var response = _todoService.InsertNewTodo(todoModel);
             return Ok(response);
         }
 
         [HttpPut] // update records in database
-        public async Task<IActionResult> Put()
+        [Route("completeTodo")]
+        public IActionResult CompleteTodo(int todoId)
         {
-            return Ok();
+            var response = _todoService.UpdateTodo(todoId);
+            return Ok(response);
+        }
+
+        [HttpPut] // update records in database
+        [Route("updateTodo")]
+        public IActionResult UpdateTodoItem(int todoId, string taskName)
+        {
+            var response = _todoService.UpdateTodo(todoId, taskName);
+            return Ok(response);
         }
 
 
         [HttpDelete] // delete a record from database
         public async Task<IActionResult> Delete(int id)
         {
+            var response = await _todoService.DeleteTodoAsync(id);
 
-            var response = _todoService.DeleteTodo(id);
+            return Ok(response);
+        }
+
+        [HttpDelete] // delete a record from database
+        [Route("deleteNonLinkedRecords")]
+        public  IActionResult DeleteNonLinkedRecords(int id)
+        {
+            var response = _todoService.DeleteNonLinkedRecords(id);
 
             return Ok(response);
         }
