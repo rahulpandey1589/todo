@@ -15,6 +15,7 @@ namespace Todo.Persistence.Configurations
         public void Configure(
             EntityTypeBuilder<TodoList> builder)
         {
+         
             builder.HasKey(x => x.Id); // primary key 
 
             builder.Property(x => x.TaskName).IsRequired().HasMaxLength(100);
@@ -25,6 +26,8 @@ namespace Todo.Persistence.Configurations
             builder.HasOne<TodoDetails>(s => s.Details)
                 .WithOne(ad => ad.TodoList)
                 .HasForeignKey<TodoDetails>(ad => ad.TodoId);
+
+
         }
     }
 }

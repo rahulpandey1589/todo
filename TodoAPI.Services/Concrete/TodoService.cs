@@ -1,6 +1,8 @@
-﻿using Todo.Persistence.Domain;
+﻿using System.Net.Http.Headers;
+using Todo.Persistence.Domain;
 using Todo.Persistence.Interfaces;
 using TodoAPI.Models;
+using TodoAPI.Models.Response;
 using TodoAPI.Services.Interfaces;
 using TodoAPI.Services.Mappers;
 
@@ -17,17 +19,37 @@ namespace TodoAPI.Services.Concrete
 
         public bool DeleteNonLinkedRecords(int id)
         {
-            return _todoRepository.DeleteNonLinkedRecords(id);  
+            return _todoRepository.DeleteNonLinkedRecords(id);
         }
 
         public async Task<bool> DeleteTodoAsync(int id)
         {
-           return await _todoRepository.DeleteTodoAsync(id);
+            return await _todoRepository.DeleteTodoAsync(id);
         }
 
-        public  bool FetchTodoByProcedure(int todoId)
+        public FetchByProcedureResponseModel FetchTodoByProcedure(int todoId)
         {
-           return  _todoRepository.FetchTodoByProcedure(todoId);   
+
+            var output = _todoRepository.FetchDataUsingLinqJoin(todoId, useLamdaOperator: true);
+
+            var ouput2 = _todoRepository.OrderByExample(false);
+
+
+            var dataResponse = _todoRepository.FetchTodoByProcedure(todoId);
+
+            if (dataResponse is not null)
+            {
+                return new FetchByProcedureResponseModel()
+                {
+                    AssignedTo = dataResponse.AssignedTo,
+                    Description = dataResponse.Description,
+                    Id = dataResponse.Id,
+                    IsCompleted = true,
+                    TaskName = dataResponse.TaskName,
+                    TaskType = dataResponse.TaskType
+                };
+            }
+            return new FetchByProcedureResponseModel();
         }
 
         public IEnumerable<TodoModel> GetAllTodos()
@@ -55,19 +77,19 @@ namespace TodoAPI.Services.Concrete
             return _todoRepository.InsertTodo(todo);
         }
 
-        public bool UpdateTodo(int  id)
+        public bool UpdateTodo(int id)
         {
             // write own logic here
 
-           return _todoRepository.UpdateTodo(id);
+            return _todoRepository.UpdateTodo(id);
         }
 
         public bool UpdateTodo(int Id, string taskName)
         {
-           return _todoRepository.UpdateTodo(Id, taskName);
+            return _todoRepository.UpdateTodo(Id, taskName);
         }
     }
 
 
- 
+
 }

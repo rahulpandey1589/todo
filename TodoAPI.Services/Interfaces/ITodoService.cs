@@ -1,4 +1,5 @@
 ﻿using TodoAPI.Models;
+using TodoAPI.Models.Response;
 
 namespace TodoAPI.Services.Interfaces
 {
@@ -19,7 +20,7 @@ namespace TodoAPI.Services.Interfaces
 
         bool DeleteNonLinkedRecords(int id);
 
-        bool FetchTodoByProcedure(int todoId);
+        FetchByProcedureResponseModel FetchTodoByProcedure(int todoId);
 
 
     }

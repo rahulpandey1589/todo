@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using Todo.Persistence.Domain;
+using Todo.Persistence.Domain.StoredProcedures;
 using Todo.Persistence.Interfaces;
 
 
@@ -8,6 +9,10 @@ using Todo.Persistence.Interfaces;
  *   Stage
  *   Commit
  *   Push
+ *   
+ *   
+ *   Joins in EF
+ *   
  */
 
 namespace Todo.Persistence.Concrete
@@ -56,11 +61,14 @@ namespace Todo.Persistence.Concrete
             return recordDeleted > 0 ? true : false;  // ternary operator
         }
 
-        public bool FetchTodoByProcedure(int todoId)
+        public sp_FetchTodoResult FetchTodoByProcedure(int todoId)
         {
-            var response = _context.Database.SqlQueryRaw<SqlOutput>("exec  sp_FetchTodo @Id ={0}", todoId); // this is possible
+            var response = _context.FetchTodoResult
+                                .FromSqlRaw(
+                                        "exec sp_FetchTodo @TodoId ={0}", todoId)
+                               .ToList(); // this is possible
 
-            return true;
+            return response.FirstOrDefault();
         }
 
         public IQueryable<TodoList> GetAll()
@@ -110,17 +118,106 @@ namespace Todo.Persistence.Concrete
                 return _context.SaveChanges() > 0 ? true : false;
             }
             return false;
-
         }
-    }
 
-    public class SqlOutput
-    {
-        public int Id { get; set; }
-        public string AssginedTo { get; set; }
-        public bool IsCompleted { get; set; }
-        public string Description { get; set; }
+        /*
+         * 1. using Lamda operators
+         * 2. using joins
+         */
 
-        public string TaskType { get; set; }
+        public FetchTodoResult FetchDataUsingLinqJoin(int todoId, bool useLamdaOperator)
+        {
+            FetchTodoResult result = new();
+
+            if (useLamdaOperator)
+            {
+                result = _context.Todos
+                              .Join(_context.TodoDetails,
+                                      td => td.Id,                     // join 
+                                      tDetails => tDetails.TodoId,    // join 
+                                      (td, tDetails) =>
+                                       new FetchTodoResult        // Projection
+                                       {
+                                           AssignedTo = td.AssignedTo,
+                                           Description = tDetails.Description,
+                                           Id = td.Id,
+                                           IsCompleted = td.IsCompleted,
+                                           TaskName = td.TaskName,
+                                           TaskType = tDetails.TaskType
+                                       })
+                              .Where(r => r.Id == todoId)
+                              .FirstOrDefault()!;
+            }
+            else
+            {
+
+
+                result = (from td in _context.Todos
+                          join tDetails in _context.TodoDetails
+                          on td.Id equals tDetails.TodoId  // join condition
+                          where td.Id == todoId // filter condition
+                          select new FetchTodoResult // Projection
+                          {
+                              AssignedTo = td.AssignedTo,
+                              Description = tDetails.Description,
+                              Id = td.Id,
+                              IsCompleted = td.IsCompleted,
+                              TaskName = td.TaskName,
+                              TaskType = tDetails.TaskType
+                          }).FirstOrDefault()!;
+
+
+
+            }
+
+            return result;
+        }
+
+        public List<FetchTodoResult> OrderByExample(bool useLamdaOperator)
+        {
+            List<FetchTodoResult> result = new List<FetchTodoResult>();
+
+            if (useLamdaOperator)
+            {
+                result = _context.Todos
+                              .Join(_context.TodoDetails,
+                                      td => td.Id,                     // join 
+                                      tDetails => tDetails.TodoId,    // join 
+                                      (td, tDetails) =>
+                                       new FetchTodoResult        // Projection
+                                       {
+                                           AssignedTo = td.AssignedTo,
+                                           Description = tDetails.Description,
+                                           Id = td.Id,
+                                           IsCompleted = td.IsCompleted,
+                                           TaskName = td.TaskName,
+                                           TaskType = tDetails.TaskType
+                                       })
+                              .OrderByDescending(x => x.TaskName).ToList();
+            }
+            else
+            {
+
+
+                result = (from td in _context.Todos
+                          join tDetails in _context.TodoDetails
+                          on td.Id equals tDetails.TodoId  // join condition
+                          select new FetchTodoResult // Projection
+                          {
+                              AssignedTo = td.AssignedTo,
+                              Description = tDetails.Description,
+                              Id = td.Id,
+                              IsCompleted = td.IsCompleted,
+                              TaskName = td.TaskName,
+                              TaskType = tDetails.TaskType
+                          })
+                          .OrderBy(x => x.TaskName)
+                          .ToList();
+
+
+            }
+
+            return result;
+        }
     }
 }

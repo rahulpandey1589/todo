@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Todo.Persistence.Domain.StoredProcedures;
 
 namespace Todo.Persistence.Domain
 {
@@ -44,7 +45,12 @@ namespace Todo.Persistence.Domain
 
         public DbSet<TodoList> Todos { get; set; }
 
+        public DbSet<TodoDetails> TodoDetails { get; set; }
+
+
         public DbSet<SampleTable> SampleTables { get; set; }    
+
+        public DbSet<sp_FetchTodoResult> FetchTodoResult { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Todo.Persistence.Domain;
+using Todo.Persistence.Domain.StoredProcedures;
 
 namespace Todo.Persistence.Interfaces
 {
@@ -18,7 +19,11 @@ namespace Todo.Persistence.Interfaces
 
         bool DeleteNonLinkedRecords(int id);
 
-        bool FetchTodoByProcedure(int todoId);
+        sp_FetchTodoResult FetchTodoByProcedure(int todoId);
+
+        FetchTodoResult FetchDataUsingLinqJoin(int todoId, bool useLamdaOperator);
+
+        List<FetchTodoResult> OrderByExample(bool useLamdaOperator);
 
     }
 }

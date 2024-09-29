@@ -1,4 +1,7 @@
-﻿namespace Todo.Persistence.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Serialization;
+
+namespace Todo.Persistence.Domain
 {
 
     public class TodoList : AuditEntity
