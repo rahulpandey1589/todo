@@ -8,6 +8,24 @@ using TodoAPI.Services.Mappers;
 
 namespace TodoAPI.Services.Concrete
 {
+    /*
+     * 1. CRUD Todo
+     * 2. Create an API to find records based on AssignedTo
+     * 3. Create an API to find pending Todo's
+     * 4. Create an API to find todo's created in last 7 days
+     * 
+     * 
+     * 
+     * 1. Create Employee, department
+     * 2. join between employee, department
+     * 
+     * 
+     * 
+     * 1. Customer
+     * 2. Order Table
+     * 3. Product
+     */
+
     public class TodoService : ITodoService
     {
         private readonly ITodoRepository _todoRepository;
