@@ -11,22 +11,21 @@ namespace Todo.Persistence.Domain
     // Entity Framework Heart
     public class TodoDbContext : DbContext
     {
-
-        public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options)
+        public TodoDbContext(
+            DbContextOptions<TodoDbContext> options) : base(options)
         {
 
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(
+            ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TodoDbContext).Assembly);  // reflection
-
         }
 
 
         public override int SaveChanges()
         {
-
             foreach (var entry in ChangeTracker.Entries<AuditEntity>())
             {
                 if(entry.State == EntityState.Added)
@@ -35,22 +34,13 @@ namespace Todo.Persistence.Domain
                     entry.Entity.CreatedBy = "System";
                 }
             }
-
-
             return base.SaveChanges();
         }
 
-
         public DbSet<Users> Users { get; set; }
-
         public DbSet<TodoList> Todos { get; set; }
-
         public DbSet<TodoDetails> TodoDetails { get; set; }
-
-
-        public DbSet<SampleTable> SampleTables { get; set; }    
-
+        public DbSet<SampleTable> SampleTables { get; set; } 
         public DbSet<sp_FetchTodoResult> FetchTodoResult { get; set; }
-
     }
 }
