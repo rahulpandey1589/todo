@@ -73,7 +73,7 @@ namespace Todo.Persistence.Concrete
 
         public IQueryable<TodoList> GetAll()
         {
-            return _context.Todos.Include(x => x.Details);
+            return _context.Todos.Include(x => x.Details).Where(x => x.Details != null);
         }
 
         public IQueryable<TodoList> GetAll(bool fetchPending)

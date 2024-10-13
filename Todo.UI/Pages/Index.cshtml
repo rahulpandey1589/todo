@@ -5,6 +5,15 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1> Index Loaded</h1>
+</div>
+<div>
+    <ul>
+        @foreach (var todos in Model.ResponseModel)
+        {
+            <li>
+                <strong> @todos.TaskName</strong> - @todos.TaskType
+            </li>
+        }
+    </ul>
 </div>

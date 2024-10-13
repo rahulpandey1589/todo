@@ -21,6 +21,8 @@ namespace Todo.Persistence.Domain
             ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TodoDbContext).Assembly);  // reflection
+
+
         }
 
 
