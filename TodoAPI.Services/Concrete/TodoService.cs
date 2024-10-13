@@ -48,9 +48,9 @@ namespace TodoAPI.Services.Concrete
         public FetchByProcedureResponseModel FetchTodoByProcedure(int todoId)
         {
 
-            var output = _todoRepository.FetchDataUsingLinqJoin(todoId, useLamdaOperator: true);
+            //var output = _todoRepository.FetchDataUsingLinqJoin(todoId, useLamdaOperator: true);
 
-            var ouput2 = _todoRepository.OrderByExample(false);
+            //var ouput2 = _todoRepository.OrderByExample(false);
 
 
             var dataResponse = _todoRepository.FetchTodoByProcedure(todoId);

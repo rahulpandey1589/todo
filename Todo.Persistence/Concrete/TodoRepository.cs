@@ -68,7 +68,7 @@ namespace Todo.Persistence.Concrete
                                         "exec sp_FetchTodo @TodoId ={0}", todoId)
                                .ToList(); // this is possible
 
-            return response.FirstOrDefault();
+            return response.FirstOrDefault()!;
         }
 
         public IQueryable<TodoList> GetAll()

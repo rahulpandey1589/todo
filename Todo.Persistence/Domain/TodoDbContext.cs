@@ -22,7 +22,7 @@ namespace Todo.Persistence.Domain
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TodoDbContext).Assembly);  // reflection
 
-
+            modelBuilder.Entity<sp_FetchTodoResult>().HasNoKey().ToView("dbo.sp_FetchTodo");
         }
 
 

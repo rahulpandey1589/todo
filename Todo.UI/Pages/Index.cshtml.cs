@@ -31,12 +31,8 @@ namespace Todo.UI.Pages
 
                     HttpResponseMessage response = client.GetAsync(apiUrl).Result;
                     response.EnsureSuccessStatusCode();
-
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-
-
-                    List<TodoResponse> allTodos = JsonConvert.DeserializeObject<List<TodoResponse>>(responseBody)!;
-                    ResponseModel = allTodos;   
+                    ResponseModel = JsonConvert.DeserializeObject<List<TodoResponse>>(responseBody)!;
                 }
 
 
