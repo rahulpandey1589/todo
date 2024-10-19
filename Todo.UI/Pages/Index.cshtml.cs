@@ -8,14 +8,14 @@ namespace Todo.UI.Pages
 {
     public class IndexModel : PageModel
     {
-      
+
         private readonly ILogger<IndexModel> _logger;
         private const string baseApiUrl = "https://localhost:7037/api/Todo";
 
         public List<TodoResponse> ResponseModel { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage ="Task Name is required")]
+        [Required(ErrorMessage = "Task Name is required")]
         public string NewTask { get; set; }
 
         [BindProperty]
@@ -27,10 +27,10 @@ namespace Todo.UI.Pages
         public string Description { get; set; }
 
         public IndexModel(
-       
+
             ILogger<IndexModel> logger)
         {
-  
+
             _logger = logger;
         }
 
@@ -42,10 +42,9 @@ namespace Todo.UI.Pages
 
         public void OnPost()
         {
-            if (!string.IsNullOrEmpty(NewTask))
+            try
             {
-
-                try
+                if (!string.IsNullOrEmpty(NewTask))
                 {
                     TodoResponse todoData = new TodoResponse()
                     {
@@ -56,26 +55,31 @@ namespace Todo.UI.Pages
                         TaskType = "urgent"
                     };
 
+
                     using (HttpClient client = new HttpClient())
                     {
                         HttpResponseMessage response = client.PostAsJsonAsync<TodoResponse>(baseApiUrl + "/post", todoData).Result;
                         response.EnsureSuccessStatusCode();
+
+                        ModelState.Clear();
                     }
-
-                    BindData();
-                }
-                catch (Exception)
-                {
-
-                    throw;
                 }
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally {
+                BindData();
+            }
+
         }
 
 
         public void BindData()
         {
-           // string apiUrl = "https://localhost:7037/api/Todo";
+            // string apiUrl = "https://localhost:7037/api/Todo";
 
 
             try
