@@ -83,8 +83,29 @@ namespace Todo.Persistence.Concrete
 
         public bool InsertTodo(TodoList todo)
         {
-            _context.Todos.Add(todo);
+            if (todo.Id > 0)
+            {
+                var todoDetails
+                    = _context.Todos.Where(x => x.Id == todo.Id).FirstOrDefault();
 
+                if (todoDetails != null)
+                {
+                    todoDetails.TaskName = todo.TaskName;
+                    todoDetails.AssignedTo = todo.AssignedTo;
+                    todoDetails.IsCompleted = todo.IsCompleted;
+                    todoDetails.Details = new TodoDetails()
+                    {
+                        TaskType = todo.Details.TaskType,
+                        Description = todo.Details.Description
+                    };
+
+                    _context.Entry(todoDetails).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                _context.Todos.Add(todo);
+            }
             int recordsInserted = _context.SaveChanges();
 
             return recordsInserted > 0 ? true : false;  // ternary operator

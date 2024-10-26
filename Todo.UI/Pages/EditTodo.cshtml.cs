@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Todo.UI.Models.ResponseModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace Todo.UI.Pages
 {
     public class EditTodoModel : PageModel
     {
-        [BindProperty]
-        public EditTodoViewModel EditTodoViewModel { get; set; } = new EditTodoViewModel();
+        [BindProperty] public EditTodoViewModel EditTodoViewModel { get; set; } = new EditTodoViewModel();
 
         private readonly string _baseUrl;
         private readonly IConfiguration _configuration;
@@ -25,33 +24,29 @@ namespace Todo.UI.Pages
             AssignedTo = new List<SelectListItem>();
         }
 
-        public async Task OnGet(int todoId)
+        public async Task OnGetAsync(int todoId)
         {
             await PopulateAssignedToDropDown();
-            await PopulateData(todoId);
+            await PopulateTodoDetails(todoId);
         }
 
-        public async Task PopulateData(int todoId)
+        public async Task PopulateTodoDetails(int todoId)
         {
             try
             {
+                using HttpClient client = new HttpClient();
+                HttpResponseMessage response =
+                    await client.GetAsync(_baseUrl + "/Todo/fetchByProcedure?todoId=" + todoId);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<GetTodoResponseModel>(responseBody)!;
 
-                using (HttpClient client = new HttpClient())
-                {
-
-                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Todo/fetchByProcedure?todoId=" + todoId);
-                    response.EnsureSuccessStatusCode();
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<GetTodoResponseModel>(responseBody)!;
-
-                    if (responseModel != null)
-                    {
-                        EditTodoViewModel.NewTask = responseModel.taskName;
-                        EditTodoViewModel.Description = responseModel.description;
-                        EditTodoViewModel.SelectedAssignedTo =
-                            AssignedTo.Where(x => x.Value == responseModel.assignedTo.ToString()).FirstOrDefault()!.Value;
-                    }
-                }
+                EditTodoViewModel.NewTask = responseModel.taskName;
+                EditTodoViewModel.Description = responseModel.description;
+                EditTodoViewModel.SelectedAssignedTo =
+                    AssignedTo.FirstOrDefault(
+                            x => x.Value == responseModel.assignedTo.ToString())!
+                        .Value;
             }
             catch (Exception)
             {
@@ -59,14 +54,18 @@ namespace Todo.UI.Pages
             }
         }
 
-
+        public async Task OnPostAsync()
+        {
+            
+        }
+            
+        
         public async Task PopulateAssignedToDropDown()
         {
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
-
                     HttpResponseMessage response = await client.GetAsync(_baseUrl + "/User");
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
