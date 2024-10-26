@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace Todo.UI.Pages
@@ -10,21 +11,12 @@ namespace Todo.UI.Pages
     {
 
         private readonly ILogger<IndexModel> _logger;
+
         private const string baseApiUrl = "https://localhost:7037/api/Todo";
 
         public List<TodoResponse> ResponseModel { get; set; }
 
-        [BindProperty]
-        [Required(ErrorMessage = "Task Name is required")]
-        public string NewTask { get; set; }
 
-        [BindProperty]
-        [Required(ErrorMessage = "Assigned to is required")]
-        public string AssignedTo { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "Description to is required")]
-        public string Description { get; set; }
 
         public IndexModel(
 
@@ -39,49 +31,30 @@ namespace Todo.UI.Pages
             BindData();
         }
 
-
-        public void OnPost()
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            try
+            using (HttpClient client = new HttpClient())
             {
-                if (!string.IsNullOrEmpty(NewTask))
-                {
-                    TodoResponse todoData = new TodoResponse()
-                    {
-                        TaskName = NewTask,
-                        AssignedTo = AssignedTo,
-                        IsCompleted = false,
-                        Description = Description,
-                        TaskType = "urgent"
-                    };
+                string deleteUrl = baseApiUrl + $"?id={id}";
 
-
-                    using (HttpClient client = new HttpClient())
-                    {
-                        HttpResponseMessage response = client.PostAsJsonAsync<TodoResponse>(baseApiUrl + "/post", todoData).Result;
-                        response.EnsureSuccessStatusCode();
-
-                        ModelState.Clear();
-                    }
-                }
+                HttpResponseMessage response = await client.DeleteAsync(deleteUrl);
+                response.EnsureSuccessStatusCode();
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally {
-                BindData();
-            }
-
+            return RedirectToPage();
         }
 
+        public IActionResult OnPostEdit(int id)
+        {
+            return RedirectToPage("/Create");
+        }
+
+        public IActionResult OnPostCreateNew()
+        {
+            return RedirectToPage("/Create");
+        }
 
         public void BindData()
         {
-            // string apiUrl = "https://localhost:7037/api/Todo";
-
-
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -92,12 +65,9 @@ namespace Todo.UI.Pages
                     string responseBody = response.Content.ReadAsStringAsync().Result;
                     ResponseModel = JsonConvert.DeserializeObject<List<TodoResponse>>(responseBody)!;
                 }
-
-
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

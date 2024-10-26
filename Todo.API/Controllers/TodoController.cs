@@ -1,12 +1,14 @@
 ﻿using TodoAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using TodoAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Cors;
 
 namespace Todo.API.Controllers
 {
     // Separation of concerns
     // Route
 
+    [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoController : ControllerBase

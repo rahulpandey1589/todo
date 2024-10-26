@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Todo.Persistence.Concrete;
 using Todo.Persistence.Domain;
@@ -15,7 +16,15 @@ namespace Todo.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigins", builder =>
+                {
+                    builder.WithOrigins("https://localhost:7194/")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -32,6 +41,9 @@ namespace Todo.API
             builder.Services.AddTransient<ITodoService, TodoService>();
             builder.Services.AddTransient<ITodoRepository, TodoRepository>();
 
+            builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
+
 
             var app = builder.Build();
 
@@ -41,14 +53,13 @@ namespace Todo.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseRouting();
+            app.UseCors();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-
             app.MapControllers();
-
             app.Run();
         }
     }

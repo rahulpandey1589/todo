@@ -3,86 +3,71 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<html lang="en">
-<head>
-    <title>Todo List</title>
-</head>
-<body>
-    <div class="text-center">
-        <h1> Todo List</h1>
-    </div>
-    <form method="post">
-        <div>
-            <label asp-for="NewTask"></label>
-            <input type="text" asp-for="NewTask" class="form-control" placeholder="Please enter a new item" />
-            <span style="color:red" asp-validation-for="NewTask"></span>
-        </div>
-        <div>
-            <label asp-for="AssignedTo"></label>
-            <input type="text" asp-for="AssignedTo" class="form-control" placeholder="Assigned this to yourself or your team" />
-            <span style="color:red" asp-validation-for="AssignedTo"></span>
-        </div>
-        <div>
-            <label asp-for="Description"></label>
-            <input type="text" asp-for="Description" class="form-control" placeholder="Please enter description" />
-            <span style="color:red" asp-validation-for="Description"></span>
-        </div>
-        <br />
 
-        <button class="btn btn-primary" type="submit">Add New Todo</button>
-    </form>
-    <br/>
-    <div class="container">
-        @if (Model.ResponseModel == null || !Model.ResponseModel.Any())
-        {
-            <div class="alert alert-warning" role="alert">
-                No Pending Todos
-            </div>
-        }
-        else
-        {
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Task Name</th>
-                        <th>Description</th>
-                        <th>Assigned To</th>
-                        <th>Completed</th>
-                        <th>Edit</th>
-                        <th>Mark Complete</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var todos in Model.ResponseModel)
-                    {
-                        <tr>
-                            <td>
-                                @todos.TaskName
-                            </td>
-                            <td>
-                                @todos.Description
-                            </td>
-                            <td>
-                                @todos.AssignedTo
-                            </td>
-                            <td>
-                                @todos.IsCompleted
-                            </td>
-                            <td>
-                                <button class="btn btn-primary">Edit Todo</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-success">Complete Todo</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger">Delete Todo</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+
+<br />
+<div class="container">
+    <div class="text-center">
+        <h1>Todo's List</h1>
     </div>
-</body>
-</html>
+    <div class="text-right">
+        <form method="post">
+            <button type="submit" asp-page-handler="CreateNew" class="btn btn-primary">Add New</button>
+        </form>
+    </div>
+    <br />
+    @if (Model.ResponseModel == null || !Model.ResponseModel.Any())
+    {
+        <div class="alert alert-warning" role="alert">
+            No Pending Todos
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Assigned To</th>
+                    <th>Completed</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var todos in Model.ResponseModel)
+                {
+                    <tr>
+                        <td>
+                            @todos.Id
+                        </td>
+                        <td>
+                            @todos.TaskName
+                        </td>
+                        <td>
+                            @todos.Description
+                        </td>
+                        <td>
+                            @todos.AssignedTo
+                        </td>
+                        <td>
+                            @todos.IsCompleted
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="Edit" asp-route-id="@todos.Id">
+                                <button class="btn btn-primary" type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@todos.Id">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

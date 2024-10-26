@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TodoAPI.Services.Interfaces;
 
 namespace Todo.API.Controllers
 {
@@ -6,10 +7,17 @@ namespace Todo.API.Controllers
     [ApiController]
     public class UserController :ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok();
+            return Ok(await _userService.GetAllUsers());
         }
 
         [HttpPost]
