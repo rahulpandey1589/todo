@@ -1,0 +1,32 @@
+﻿@page
+@model Todo.UI.Pages.EditTodoModel
+@{
+}
+<div class="text-center">
+    <h1>Edit Existing Todo</h1>
+</div>
+<form method="post">
+    <div>
+        <label asp-for="NewTask"></label>
+        <input type="text" asp-for="NewTask" class="form-control" placeholder="Please enter a new item" />
+        <span style="color:red" asp-validation-for="NewTask"></span>
+    </div>
+    <div>
+        <label asp-for="AssignedTo"></label>
+        <select asp-for="SelectedAssignedTo" class="form-control" asp-items="Model.AssignedTo">
+            <option value="">Please Select Assigned To</option>
+        </select>
+
+      
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input type="text" asp-for="Description" class="form-control" placeholder="Please enter description" />
+        <span style="color:red" asp-validation-for="Description"></span>
+    </div>
+    <br />
+
+    <button class="btn btn-success" type="submit">Edit Todo</button>
+
+
+</form>

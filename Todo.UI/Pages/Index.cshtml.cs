@@ -45,7 +45,7 @@ namespace Todo.UI.Pages
 
         public IActionResult OnPostEdit(int id)
         {
-            return RedirectToPage("/Create");
+            return RedirectToPage("/EditTodo");
         }
 
         public IActionResult OnPostCreateNew()
