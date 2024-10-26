@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using Todo.UI.Models;
 
 namespace Todo.UI.Pages
 {
@@ -74,7 +75,7 @@ namespace Todo.UI.Pages
                     HttpResponseMessage response = client.GetAsync(baseApiUrl + "/User").Result;
                     response.EnsureSuccessStatusCode();
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    var responseModel = JsonConvert.DeserializeObject<List<UserResponse>>(responseBody)!;
+                    var responseModel = JsonConvert.DeserializeObject<List<UserResponseModel>>(responseBody)!;
 
                     if (responseModel.Count > 0)
                     {

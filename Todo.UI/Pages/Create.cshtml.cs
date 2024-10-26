@@ -3,29 +3,25 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using Todo.UI.Models;
 
 namespace Todo.UI.Pages
 {
     public class CreateModel : PageModel
     {
         [BindProperty]
-        [Required(ErrorMessage = "Task Name is required")]
-        [MinLength(3, ErrorMessage = "Task Name should be atleast 3 character long.")]
-        [MaxLength(15, ErrorMessage = "Task Name should not be more than 15 character long.")]
-        public string NewTask { get; set; } = default!;
+        public CreateTodoModel CreateTodoModel { get; set; } = new CreateTodoModel();
+        private readonly string _baseUrl;
+        private readonly IConfiguration _configuration;
 
-        [BindProperty]
-        [Required(ErrorMessage = "Assigned to is required")]
-        public string SelectedAssignedTo { get; set; } = default!;
+        public List<SelectListItem> AssignedTo { get; set; } = new List<SelectListItem>();
 
-        [BindProperty]
-        [Required(ErrorMessage = "Description to is required")]
-        public string Description { get; set; } = default!;
+        public CreateModel(IConfiguration configuration)
+        {
 
-        private const string baseApiUrl = "https://localhost:7037/api";
-
-
-        public List<SelectListItem> AssignedTo { get; set; }
+            this._configuration = configuration;
+            _baseUrl = _configuration.GetValue<string>("TodoApiUrl")!;
+        }
 
         public IActionResult OnGet()
         {
@@ -42,17 +38,17 @@ namespace Todo.UI.Pages
                     return Page();
                 }
 
-                TodoResponse todoData = new TodoResponse()
+                CreateTodoRequestModel todoData = new()
                 {
-                    TaskName = NewTask,
-                    AssignedTo = SelectedAssignedTo,
+                    TaskName = CreateTodoModel.NewTask,
+                    AssignedTo = CreateTodoModel.SelectedAssignedTo,
                     IsCompleted = false,
-                    Description = Description,
+                    Description = CreateTodoModel.Description,
                     TaskType = "urgent"
                 };
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = await client.PostAsJsonAsync<TodoResponse>(baseApiUrl + "/Todo/post", todoData);
+                    HttpResponseMessage response = await client.PostAsJsonAsync<CreateTodoRequestModel>(_baseUrl + "/Todo/post", todoData);
                     response.EnsureSuccessStatusCode();
 
                     return RedirectToPage("Index");
@@ -73,10 +69,10 @@ namespace Todo.UI.Pages
                 using (HttpClient client = new HttpClient())
                 {
 
-                    HttpResponseMessage response = client.GetAsync(baseApiUrl + "/User").Result;
+                    HttpResponseMessage response = client.GetAsync(_baseUrl + "/User").Result;
                     response.EnsureSuccessStatusCode();
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    var responseModel = JsonConvert.DeserializeObject<List<UserResponse>>(responseBody)!;
+                    var responseModel = JsonConvert.DeserializeObject<List<UserResponseModel>>(responseBody)!;
 
                     if (responseModel.Count > 0)
                     {
@@ -98,11 +94,5 @@ namespace Todo.UI.Pages
     }
 
 
-    public class UserResponse
-    {
 
-        public string UserName { get; set; } = default!;
-
-        public string EmailAddress { get; set; } = default!;
-    }
 }

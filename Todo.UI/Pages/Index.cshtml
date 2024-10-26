@@ -16,7 +16,7 @@
         </form>
     </div>
     <br />
-    @if (Model.ResponseModel == null || !Model.ResponseModel.Any())
+    @if (Model.Todos == null || !Model.Todos.Any())
     {
         <div class="alert alert-warning" role="alert">
             No Pending Todos
@@ -37,7 +37,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var todos in Model.ResponseModel)
+                @foreach (var todos in Model.Todos)
                 {
                     <tr>
                         <td>

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Net.Http.Json;
+using Todo.UI.Models;
 
 namespace Todo.UI.Pages
 {
@@ -11,31 +12,31 @@ namespace Todo.UI.Pages
     {
 
         private readonly ILogger<IndexModel> _logger;
-
-        private const string baseApiUrl = "https://localhost:7037/api/Todo";
-
-        public List<TodoResponse> ResponseModel { get; set; }
+        private readonly IConfiguration _configuration;
+        private readonly string _baseUrl; 
+        public List<CreateTodoRequestModel> Todos { get; set; }
 
 
 
         public IndexModel(
-
-            ILogger<IndexModel> logger)
+            ILogger<IndexModel> logger,
+            IConfiguration configuration)
         {
-
             _logger = logger;
+            this._configuration = configuration;
+            _baseUrl = _configuration.GetValue<string>("TodoApiUrl")!;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            BindData();
+           await ListTodos();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             using (HttpClient client = new HttpClient())
             {
-                string deleteUrl = baseApiUrl + $"?id={id}";
+                string deleteUrl = _baseUrl + $"/Todo?id={id}";
 
                 HttpResponseMessage response = await client.DeleteAsync(deleteUrl);
                 response.EnsureSuccessStatusCode();
@@ -53,17 +54,17 @@ namespace Todo.UI.Pages
             return RedirectToPage("/Create");
         }
 
-        public void BindData()
+        public async Task ListTodos()
         {
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
 
-                    HttpResponseMessage response = client.GetAsync(baseApiUrl).Result;
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Todo");
                     response.EnsureSuccessStatusCode();
-                    string responseBody = response.Content.ReadAsStringAsync().Result;
-                    ResponseModel = JsonConvert.DeserializeObject<List<TodoResponse>>(responseBody)!;
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Todos = JsonConvert.DeserializeObject<List<CreateTodoRequestModel>>(responseBody)!;
                 }
             }
             catch (Exception)
@@ -71,19 +72,5 @@ namespace Todo.UI.Pages
                 throw;
             }
         }
-    }
-
-    public class TodoResponse
-    {
-        public int Id { get; set; }
-
-        public string TaskName { get; set; } = default!;
-
-        public string AssignedTo { get; set; } = default!;
-
-        public bool IsCompleted { get; set; }
-        public string Description { get; set; } = default!;
-
-        public string TaskType { get; set; } = default!;
     }
 }
