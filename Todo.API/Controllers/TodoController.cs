@@ -42,7 +42,7 @@ namespace Todo.API.Controllers
 
             var allTodos = _todoService.GetAllTodos();
 
-            return Ok(allTodos);
+            return Ok(await  Task.FromResult(allTodos));
         }
 
         [HttpGet]
