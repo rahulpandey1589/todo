@@ -9,6 +9,8 @@ namespace Todo.UI
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            builder.Services.AddAuthentication();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -25,6 +27,7 @@ namespace Todo.UI
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.MapRazorPages();
 

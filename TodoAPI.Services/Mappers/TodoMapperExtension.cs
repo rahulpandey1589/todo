@@ -36,6 +36,7 @@ namespace TodoAPI.Services.Mappers
         {
             return new TodoList()
             {
+                Id = model.Id,
                 AssignedTo = model.AssignedTo,
                 TaskName = model.TaskName,
                 Details= new TodoDetails()

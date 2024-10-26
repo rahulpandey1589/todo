@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Todo.UI.Models.RequestModel;
 using Todo.UI.Models.ResponseModel;
 using Todo.UI.Models.ViewModel;

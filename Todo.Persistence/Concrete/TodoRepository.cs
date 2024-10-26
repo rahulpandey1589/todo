@@ -86,20 +86,18 @@ namespace Todo.Persistence.Concrete
             if (todo.Id > 0)
             {
                 var todoDetails
-                    = _context.Todos.Where(x => x.Id == todo.Id).FirstOrDefault();
+                    = _context.Todos.Include(x => x.Details).FirstOrDefault(x => x.Id == todo.Id);
 
                 if (todoDetails != null)
                 {
                     todoDetails.TaskName = todo.TaskName;
                     todoDetails.AssignedTo = todo.AssignedTo;
                     todoDetails.IsCompleted = todo.IsCompleted;
-                    todoDetails.Details = new TodoDetails()
-                    {
-                        TaskType = todo.Details.TaskType,
-                        Description = todo.Details.Description
-                    };
-
+                    todoDetails.Details.TaskType = todo.Details.TaskType;
+                    todoDetails.Details.Description = todo.Details.Description;
+                    
                     _context.Entry(todoDetails).State = EntityState.Modified;
+                    _context.Todos.Update(todoDetails);
                 }
             }
             else
