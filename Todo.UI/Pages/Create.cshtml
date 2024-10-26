@@ -14,11 +14,8 @@
     <div>
         <label asp-for="AssignedTo"></label>
         <select asp-for="CreateTodoModel.SelectedAssignedTo" class="form-control" asp-items="Model.AssignedTo">
-            <option value="">Please Select Assigned To</option>
+            <option value="">Please Select</option>
         </select>
-
-       @*  <input type="text" asp-for="AssignedTo" class="form-control" placeholder="Assigned this to yourself or your team" />
-        <span style="color:red" asp-validation-for="AssignedTo"></span> *@
     </div>
     <div>
         <label asp-for="CreateTodoModel.Description"></label>
@@ -27,7 +24,5 @@
     </div>
     <br />
 
-    <button class="btn btn-primary" type="submit">Add New Todo</button>
-
-
+    <button class="btn btn-primary" type="submit">Add New</button>
 </form>

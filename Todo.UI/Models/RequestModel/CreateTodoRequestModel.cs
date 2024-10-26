@@ -1,4 +1,4 @@
-﻿namespace Todo.UI.Models
+﻿namespace Todo.UI.Models.RequestModel
 {
     public class CreateTodoRequestModel
     {

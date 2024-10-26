@@ -3,14 +3,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Todo.UI.Models;
+using Todo.UI.Models.RequestModel;
+using Todo.UI.Models.ResponseModel;
+using Todo.UI.Models.ViewModel;
 
 namespace Todo.UI.Pages
 {
     public class CreateModel : PageModel
     {
         [BindProperty]
-        public CreateTodoModel CreateTodoModel { get; set; } = new CreateTodoModel();
+        public CreateTodoViewModel CreateTodoModel { get; set; } = new CreateTodoViewModel();
         private readonly string _baseUrl;
         private readonly IConfiguration _configuration;
 

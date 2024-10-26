@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Todo.UI.Models
+namespace Todo.UI.Models.ViewModel
 {
-    [BindProperties]
-    public class CreateTodoModel
+    public class EditTodoViewModel
     {
         [Required(ErrorMessage = "Task Name is required")]
         [MinLength(3, ErrorMessage = "Task Name should be atleast 3 character long.")]

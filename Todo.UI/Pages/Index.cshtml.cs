@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Net.Http.Json;
-using Todo.UI.Models;
+using Todo.UI.Models.RequestModel;
 
 namespace Todo.UI.Pages
 {
@@ -46,7 +46,7 @@ namespace Todo.UI.Pages
 
         public IActionResult OnPostEdit(int id)
         {
-            return RedirectToPage("/EditTodo");
+            return RedirectToPage("/EditTodo", new { todoId = id });
         }
 
         public IActionResult OnPostCreateNew()

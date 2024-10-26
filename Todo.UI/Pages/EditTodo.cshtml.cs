@@ -1,41 +1,37 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Todo.UI.Models.ViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Todo.UI.Models.ResponseModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using Todo.UI.Models;
 
 namespace Todo.UI.Pages
 {
     public class EditTodoModel : PageModel
     {
         [BindProperty]
-        [Required(ErrorMessage = "Task Name is required")]
-        [MinLength(3, ErrorMessage = "Task Name should be atleast 3 character long.")]
-        [MaxLength(15, ErrorMessage = "Task Name should not be more than 15 character long.")]
-        public string NewTask { get; set; } = default!;
+        public EditTodoViewModel EditTodoViewModel { get; set; } = new EditTodoViewModel();
 
-        [BindProperty]
-        [Required(ErrorMessage = "Assigned to is required")]
-        public string SelectedAssignedTo { get; set; } = default!;
-
-        [BindProperty]
-        [Required(ErrorMessage = "Description to is required")]
-        public string Description { get; set; } = default!;
-
-        private const string baseApiUrl = "https://localhost:7037/api";
-
-
+        private readonly string _baseUrl;
+        private readonly IConfiguration _configuration;
         public List<SelectListItem> AssignedTo { get; set; }
 
-        public void OnGet()
+
+        public EditTodoModel(IConfiguration configuration)
         {
-            BindAssignedTo();
-            PopulateData();
+            _configuration = configuration;
+            _baseUrl = _configuration.GetValue<string>("TodoApiUrl")!;
+            AssignedTo = new List<SelectListItem>();
         }
 
+        public async Task OnGet(int todoId)
+        {
+            await PopulateAssignedToDropDown();
+            await PopulateData(todoId);
+        }
 
-        public void PopulateData()
+        public async Task PopulateData(int todoId)
         {
             try
             {
@@ -43,38 +39,37 @@ namespace Todo.UI.Pages
                 using (HttpClient client = new HttpClient())
                 {
 
-                    HttpResponseMessage response = client.GetAsync("https://localhost:7037/api/Todo/fetchByProcedure?todoId=1041").Result;
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Todo/fetchByProcedure?todoId=" + todoId);
                     response.EnsureSuccessStatusCode();
-                    string responseBody = response.Content.ReadAsStringAsync().Result;
-                    var responseModel = JsonConvert.DeserializeObject<GetTodoResponse>(responseBody)!;
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<GetTodoResponseModel>(responseBody)!;
 
-                    if(responseModel != null)
+                    if (responseModel != null)
                     {
-                        NewTask = responseModel.taskName;
-                        Description = responseModel.description;
+                        EditTodoViewModel.NewTask = responseModel.taskName;
+                        EditTodoViewModel.Description = responseModel.description;
+                        EditTodoViewModel.SelectedAssignedTo =
+                            AssignedTo.Where(x => x.Value == responseModel.assignedTo.ToString()).FirstOrDefault()!.Value;
                     }
-
                 }
-
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
 
 
-        public void BindAssignedTo()
+        public async Task PopulateAssignedToDropDown()
         {
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
 
-                    HttpResponseMessage response = client.GetAsync(baseApiUrl + "/User").Result;
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/User");
                     response.EnsureSuccessStatusCode();
-                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    string responseBody = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<List<UserResponseModel>>(responseBody)!;
 
                     if (responseModel.Count > 0)
@@ -94,17 +89,5 @@ namespace Todo.UI.Pages
                 throw;
             }
         }
-    }
-
-    public class GetTodoResponse
-    {
-
-        public int id { get; set; }
-        public string assignedTo { get; set; }
-        public bool isCompleted { get; set; }
-        public string description { get; set; }
-        public string taskName { get; set; }
-        public string taskType { get; set; }
-
     }
 }
