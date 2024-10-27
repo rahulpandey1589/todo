@@ -62,6 +62,7 @@ namespace Todo.UI.Pages
                 {
 
                     HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Todo");
+                   // client.DefaultRequestHeaders.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlRlc3QiLCJJc0FkbWluIjoiZmFsc2UiLCJuYmYiOjE3MzAwMTM3NzIsImV4cCI6MTczMDAxNTU3MiwiaWF0IjoxNzMwMDEzNzcyfQ.6rLyvGqAPUYb1gmgxbuWWbYsRSQrVl6OCL9zvaCBIgw");
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     Todos = JsonConvert.DeserializeObject<List<CreateTodoRequestModel>>(responseBody)!;

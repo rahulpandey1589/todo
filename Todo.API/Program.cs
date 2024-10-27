@@ -1,6 +1,8 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Todo.API.OptionSetup;
 using Todo.Persistence.Concrete;
 using Todo.Persistence.Domain;
 using Todo.Persistence.Interfaces;
@@ -25,12 +27,21 @@ namespace Todo.API
                            .AllowAnyHeader();
                 });
             });
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            builder.Services.ConfigureOptions<JwtOptionSetup>();
+            builder.Services.ConfigureOptions<JwtBearerOptionSetup>();
+
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             string connectionString = builder.Configuration.GetConnectionString("TodoDbContext")!;
+
+
+            var signingKey = builder.Configuration.GetValue<string>("JsonWebTokenKeys:ValidateIssuerSigningKey");
 
 
             builder.Services.AddDbContext<TodoDbContext>(option =>

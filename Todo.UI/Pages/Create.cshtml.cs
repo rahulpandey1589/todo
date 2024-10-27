@@ -13,6 +13,7 @@ namespace Todo.UI.Pages
     {
         [BindProperty]
         public CreateTodoViewModel CreateTodoModel { get; set; } = new CreateTodoViewModel();
+
         private readonly string _baseUrl;
         private readonly IConfiguration _configuration;
 
@@ -68,24 +69,22 @@ namespace Todo.UI.Pages
         {
             try
             {
-                using (HttpClient client = new HttpClient())
+                using HttpClient client = new HttpClient();
+
+                HttpResponseMessage response = client.GetAsync(_baseUrl + "/User").Result;
+                response.EnsureSuccessStatusCode();
+                string responseBody = response.Content.ReadAsStringAsync().Result;
+                var responseModel = JsonConvert.DeserializeObject<List<UserResponseModel>>(responseBody)!;
+
+                if (responseModel.Count > 0)
                 {
-
-                    HttpResponseMessage response = client.GetAsync(_baseUrl + "/User").Result;
-                    response.EnsureSuccessStatusCode();
-                    string responseBody = response.Content.ReadAsStringAsync().Result;
-                    var responseModel = JsonConvert.DeserializeObject<List<UserResponseModel>>(responseBody)!;
-
-                    if (responseModel.Count > 0)
+                    var assigned = responseModel.Select(x => new SelectListItem
                     {
-                        var assigned = responseModel.Select(x => new SelectListItem
-                        {
-                            Text = x.EmailAddress,
-                            Value = x.UserName
-                        }).ToList();
+                        Text = x.EmailAddress,
+                        Value = x.UserName
+                    }).ToList();
 
-                        AssignedTo = assigned;
-                    }
+                    AssignedTo = assigned;
                 }
             }
             catch (Exception)

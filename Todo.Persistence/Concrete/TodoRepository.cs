@@ -102,6 +102,7 @@ namespace Todo.Persistence.Concrete
             }
             else
             {
+                _context.Entry(todo).State = EntityState.Added;
                 _context.Todos.Add(todo);
             }
             int recordsInserted = _context.SaveChanges();
