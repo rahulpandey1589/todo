@@ -1,3 +1,9 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 namespace Todo.UI
 {
     public class Program
@@ -7,9 +13,12 @@ namespace Todo.UI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSession();
             builder.Services.AddRazorPages();
 
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -29,7 +38,14 @@ namespace Todo.UI
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.MapRazorPages();
+            app.UseSession();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapFallbackToPage("/Login"); // Set "Home" as the fallback/default page
+            });
+
 
             app.Run();
         }

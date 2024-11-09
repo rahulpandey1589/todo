@@ -17,7 +17,7 @@ namespace Todo.API.OptionSetup
 
         public void Configure(string name, JwtBearerOptions options)
         {
-            options.RequireHttpsMetadata = false;
+            options.RequireHttpsMetadata = true;
             options.SaveToken = true;
             options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
             {
@@ -26,9 +26,10 @@ namespace Todo.API.OptionSetup
                 ValidateIssuer = _jwtOptions.ValidateIssuer,
                 ValidateAudience = _jwtOptions.ValidateAudience,
                 RequireExpirationTime = true,
-               ValidateLifetime =_jwtOptions.ValidateLifeTime
+                ValidateLifetime = _jwtOptions.ValidateLifeTime,
+              
             };
-        } 
+        }
 
         public void Configure(JwtBearerOptions options)
         {

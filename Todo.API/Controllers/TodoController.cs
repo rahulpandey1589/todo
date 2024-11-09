@@ -9,7 +9,7 @@ namespace Todo.API.Controllers
     // Separation of concerns
     // Route
 
-    [AllowAnonymous]
+    [Authorize]
     [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     [ApiController]

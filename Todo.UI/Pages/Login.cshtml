@@ -1,0 +1,25 @@
+﻿@page
+@model Todo.UI.Pages.LoginModel
+@{
+}
+<h2>Login</h2>
+
+<form method="post">
+    <div class="container-fluid">
+        <div>
+            <label for="username">Username</label>
+            <input class="form-control" type="text" id="username" name="Username" />
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input class="form-control" type="password" id="password" name="Password" />
+        </div>
+        <br />
+        <button type="submit">Login</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p style="color:red;">@Model.ErrorMessage</p>
+}
