@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Todo.API.Controllers
 {
-    // Separation of concerns
-    // Route
-
-    [Authorize]
+  //  [Authorize]
     [EnableCors("AllowSpecificOrigin")]
     [Route("api/[controller]")]
     [ApiController]

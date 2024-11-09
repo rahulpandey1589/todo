@@ -20,7 +20,10 @@ public class KeyVaultController : ControllerBase
     public async Task<IActionResult> GetAsync()
     {
         var secretValue = await _keyVaultService.GetKeyVaultSecret("ConnectionString");
-        return Ok(secretValue);
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        
+        string finaloutput = secretValue +  environmentName;
+        return Ok(finaloutput);
     }
     
 }
