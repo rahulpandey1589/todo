@@ -1,4 +1,6 @@
 
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -37,13 +39,9 @@ namespace Todo.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            
             string connectionString = builder.Configuration.GetConnectionString("TodoDbContext")!;
-
-
             var signingKey = builder.Configuration.GetValue<string>("JsonWebTokenKeys:ValidateIssuerSigningKey");
-
-
             builder.Services.AddDbContext<TodoDbContext>(option =>
             {
                 option.UseSqlServer(connectionString);
@@ -51,11 +49,10 @@ namespace Todo.API
 
             builder.Services.AddTransient<ITodoService, TodoService>();
             builder.Services.AddTransient<ITodoRepository, TodoRepository>();
-
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
-
-
+            builder.Services.AddTransient<IKeyVaultService, KeyVaultService>();
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

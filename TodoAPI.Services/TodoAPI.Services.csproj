@@ -11,4 +11,8 @@
     <ProjectReference Include="..\TodoAPI.Models\TodoAPI.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.7.0" />
+  </ItemGroup>
+
 </Project>
